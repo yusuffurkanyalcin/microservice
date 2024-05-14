@@ -22,4 +22,11 @@ public class AccountsController {
                 .status(HttpStatus.CREATED)
                 .body(service.createAccount(customerDto));
     }
+
+    @GetMapping("/get")
+    public ResponseEntity<CustomerDto> getAccountDetails(@RequestParam String email) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.getAccount(email));
+    }
 }
