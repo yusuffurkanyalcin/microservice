@@ -17,4 +17,18 @@ public interface IAccountsService {
      * @return a Customer's details
      */
     CustomerDto getAccount(String email);
+
+    /**
+     *
+     * @param customerDto
+     * @return boolean indicating if the update of Account details is successful or not
+     */
+    boolean updateAccount(CustomerDto customerDto);
+
+    /**
+     *
+     * @param email
+     * @return boolean indicating if the delete of Account details is successful or not
+     */
+    boolean deleteAccount(String email);
 }
