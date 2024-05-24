@@ -30,7 +30,7 @@ public class AccountsServiceImpl implements IAccountsService {
     public Accounts createAccount(CustomerDto customerDto) {
         Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
         try {
-            Optional<Customer> optionalCustomer = customerRepository.findByEmail(customer.getEmail());
+            Optional<Customer> optionalCustomer = customerRepository.findByEmailIgnoreCase(customer.getEmail());
             Customer savedCustomer = customerRepository.save(customer);
             return accountsRepository.save(createNewAccounts(savedCustomer));
         }
@@ -41,7 +41,7 @@ public class AccountsServiceImpl implements IAccountsService {
 
     @Override
     public CustomerDto getAccount(String email) {
-        Customer customer = customerRepository.findByEmail(email).orElseThrow(
+        Customer customer = customerRepository.findByEmailIgnoreCase(email).orElseThrow(
                 () -> new ResourceNotFoundException("Customer", "email", email)
         );
 
@@ -79,7 +79,7 @@ public class AccountsServiceImpl implements IAccountsService {
 
     @Override
     public boolean deleteAccount(String email) {
-        Customer customer = customerRepository.findByEmail(email).orElseThrow(
+        Customer customer = customerRepository.findByEmailIgnoreCase(email).orElseThrow(
                 () -> new ResourceNotFoundException("Customer", "email", email)
         );
 
