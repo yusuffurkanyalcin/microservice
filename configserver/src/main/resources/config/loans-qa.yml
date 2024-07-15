@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "qa"
+
+build:
+  version: "2.0"
+
+cards:
+  message: "Welcome to FurkanBank loans related QA APIs "
+  contactDetails:
+    name: "Furkan Yalcin - QA Lead"
+    email: "furkanyalcin@furkanbank.com"
+  onCallSupport:
+    - (000) 222-2233
+    - (000) 333-3344

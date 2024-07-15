@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+build:
+  version: "2.0"
+
+cards:
+  message: "Welcome to EazyBank cards related prod APIs "
+  contactDetails:
+    name: "Furkan Yalcin - Product Owner"
+    email: "furkanyalcin@furkanbank.com"
+  onCallSupport:
+    - (111) 222-3333
+    - (111) 444-5555

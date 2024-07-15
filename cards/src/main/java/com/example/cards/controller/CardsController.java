@@ -1,6 +1,7 @@
 package com.example.cards.controller;
 
 import com.example.cards.constants.CardsConstants;
+import com.example.cards.dto.CardsContactInfoDto;
 import com.example.cards.dto.CardsDto;
 import com.example.cards.dto.ResponseDto;
 import com.example.cards.service.ICardsService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class CardsController {
 
     private final ICardsService iCardsService;
+    private final CardsContactInfoDto cardsContactInfoDto;
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createCard(@Valid @RequestParam
@@ -67,6 +69,13 @@ public class CardsController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(CardsConstants.STATUS_417, CardsConstants.MESSAGE_417_DELETE));
         }
+    }
+
+    @GetMapping("/contact-info")
+    public ResponseEntity<CardsContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(cardsContactInfoDto);
     }
 
 }

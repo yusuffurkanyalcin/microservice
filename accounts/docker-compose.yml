@@ -1,0 +1,39 @@
+services:
+  accounts:
+    image: "yalcinfurkan1/accounts:v1"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - yalcinfurkan1
+
+  loans:
+    image: "yalcinfurkan1/loans:v1"
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - yalcinfurkan1
+
+  cards:
+    image: "yalcinfurkan1/cards:v1"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - yalcinfurkan1
+networks:
+  yalcinfurkan1:
+    driver: "bridge"

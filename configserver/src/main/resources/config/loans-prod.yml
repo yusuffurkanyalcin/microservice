@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+build:
+  version: "2.0"
+
+cards:
+  message: "Welcome to EazyBank loans related prod APIs "
+  contactDetails:
+    name: "Furkan Yalcin - Product Owner"
+    email: "furkanyalcin@furkanbank.com"
+  onCallSupport:
+    - (222) 333-4444
+    - (222) 444-5555
