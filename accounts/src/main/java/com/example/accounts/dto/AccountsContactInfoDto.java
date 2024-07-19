@@ -1,4 +1,4 @@
-package com.example.cards.dto;
+package com.example.accounts.dto;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -6,10 +6,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
 import java.util.Map;
 
-@ConfigurationProperties(prefix = "cards")
+@ConfigurationProperties(prefix = "accounts")
 @Data
-public class CardsContactInfoDto {
+public class AccountsContactInfoDto {
+
     private String message;
     private Map<String, String> contactDetails;
     private List<String> onCallSupport;
 }
+
+
+
