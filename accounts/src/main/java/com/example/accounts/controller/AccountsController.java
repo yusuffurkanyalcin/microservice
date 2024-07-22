@@ -35,8 +35,7 @@ import org.springframework.web.bind.annotation.*;
 public class AccountsController {
 
     private final IAccountsService service;
-    @Autowired
-    private AccountsContactInfoDto accountsContactInfoDto;
+    private final AccountsContactInfoDto accountsContactInfoDto;
 
     @Operation(
             summary = "Create Account REST API",
