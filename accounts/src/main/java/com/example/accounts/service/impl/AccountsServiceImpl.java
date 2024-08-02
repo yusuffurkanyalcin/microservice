@@ -40,7 +40,7 @@ public class AccountsServiceImpl implements IAccountsService {
     }
 
     @Override
-    public CustomerDto getAccount(String email) {
+    public CustomerDto fetchAccount(String email) {
         Customer customer = customerRepository.findByEmailIgnoreCase(email).orElseThrow(
                 () -> new ResourceNotFoundException("Customer", "email", email)
         );

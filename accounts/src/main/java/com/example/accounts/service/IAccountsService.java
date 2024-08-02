@@ -16,7 +16,7 @@ public interface IAccountsService {
      * @param email
      * @return a Customer's details
      */
-    CustomerDto getAccount(String email);
+    CustomerDto fetchAccount(String email);
 
     /**
      *

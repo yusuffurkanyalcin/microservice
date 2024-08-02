@@ -62,13 +62,13 @@ public class AccountsController {
             responseCode = "200",
             description = "HTTP Status OK"
     )
-    @GetMapping("/get")
-    public ResponseEntity<CustomerDto> getAccountDetails(@RequestParam
+    @GetMapping("/fetch")
+    public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam
                                                              @Email(message = "Email address should be a valid value")
                                                                      String email) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.getAccount(email));
+                .body(service.fetchAccount(email));
     }
 
     @Operation(
