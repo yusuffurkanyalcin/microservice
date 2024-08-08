@@ -7,6 +7,8 @@ import com.example.cards.dto.ResponseDto;
 import com.example.cards.service.ICardsService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class CardsController {
 
+    private final Logger logger = LoggerFactory.getLogger(CardsController.class);
     private ICardsService iCardsService;
 
     public CardsController(ICardsService iCardsService) {
@@ -40,9 +43,11 @@ public class CardsController {
     }
 
     @GetMapping("/fetch")
-    public ResponseEntity<CardsDto> fetchCardDetails(@RequestParam
-                                                     @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
-                                                             String mobileNumber) {
+    public ResponseEntity<CardsDto> fetchCardDetails(
+            @RequestHeader("furkanbank-correlation-id") String correlationId,
+            @RequestParam @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits") String mobileNumber)
+    {
+        logger.debug("furkanbank-correlation-id found: {} ", correlationId);
         CardsDto cardsDto = iCardsService.fetchCard(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(cardsDto);
     }

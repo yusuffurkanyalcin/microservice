@@ -20,11 +20,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-#  rabbitmq:
-#    host: "localhost"
-#    port: 5672
-#    username: "user"
-#    password: "secret"
 
 eureka:
   instance:
@@ -52,9 +47,23 @@ management:
     web:
       exposure:
         include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
   endpoint:
     shutdown:
       enabled: true
+    health:
+      probes:
+        enabled: true
   info:
     env:
       enabled: true
+
+logging:
+  level:
+    com:
+      example:
+        loans: DEBUG

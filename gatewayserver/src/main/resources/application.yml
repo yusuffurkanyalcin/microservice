@@ -9,11 +9,6 @@ spring:
         locator:
           enabled: false
           lower-case-service-id: true
-#  rabbitmq:
-#    host: "localhost"
-#    port: 5672
-#    username: "guest"
-#    password: "guest"
 
 eureka:
   instance:
@@ -30,7 +25,7 @@ info:
     name: "gatewayserver"
     description: "Furkan Bank Gateway Application"
     version: "1.0.0"
-    author: "Yusuf Furkan Yalç?n"
+    author: "Yusuf Furkan Yalï¿½?n"
 
 
 management:
@@ -44,3 +39,9 @@ management:
   info:
     env:
       enabled: true
+
+logging:
+  level:
+    com:
+      example:
+        gatewayserver: DEBUG
