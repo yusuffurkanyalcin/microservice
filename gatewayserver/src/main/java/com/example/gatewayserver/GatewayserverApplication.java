@@ -21,7 +21,8 @@ public class GatewayserverApplication {
 				.route(predicateSpec ->
 						predicateSpec.path("/furkanbank/accounts/**")
 						.filters(gatewayFilterSpec -> gatewayFilterSpec.rewritePath("/furkanbank/accounts/(?<segment>.*)","/${segment}")
-								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+								.circuitBreaker(config -> config.setName("accountsCircuitBreaker").setFallbackUri("forward:/contactSupport")))
 								.uri("lb://ACCOUNTS"))
 				.route(predicateSpec ->
 						predicateSpec.path("/furkanbank/cards/**")

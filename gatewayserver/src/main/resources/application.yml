@@ -25,7 +25,7 @@ info:
     name: "gatewayserver"
     description: "Furkan Bank Gateway Application"
     version: "1.0.0"
-    author: "Yusuf Furkan Yal�?n"
+    author: "Yusuf Furkan Yalcin"
 
 
 management:
@@ -45,3 +45,12 @@ logging:
     com:
       example:
         gatewayserver: DEBUG
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 2
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
