@@ -16,7 +16,7 @@ public class GatewayserverApplication {
 	}
 
 	@Bean
-	public RouteLocator furkanBankRouteConfig(RouteLocatorBuilder routeLocatorBuilder) {
+	public RouteLocator furkanBankRouteLocator(RouteLocatorBuilder routeLocatorBuilder) {
 		return routeLocatorBuilder.routes()
 				.route(predicateSpec ->
 						predicateSpec.path("/furkanbank/accounts/**")

@@ -9,6 +9,9 @@ spring:
         locator:
           enabled: false
           lower-case-service-id: true
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 3s
 
 eureka:
   instance:
