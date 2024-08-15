@@ -7,6 +7,7 @@ import com.example.accounts.dto.ErrorResponseDto;
 import com.example.accounts.dto.ResponseDto;
 import com.example.accounts.entity.Accounts;
 import com.example.accounts.service.IAccountsService;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,12 +18,17 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Tag(
         name = "CRUD REST APIs for Accounts in FurkanBank",
@@ -33,6 +39,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Validated
 public class AccountsController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);
 
     private final IAccountsService service;
     private final AccountsContactInfoDto accountsContactInfoDto;
@@ -124,10 +132,28 @@ public class AccountsController {
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseDto(AccountsConstants.STATUS_417, AccountsConstants.MESSAGE_417_DELETE));
     }
 
+    @Retry(name = "getContactInfo", fallbackMethod = "getContactInfoFallback")
     @GetMapping("/contact-info")
     public ResponseEntity<AccountsContactInfoDto> getContactInfo() {
+        logger.debug("getBuildInfo() method invoked");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(accountsContactInfoDto);
+    }
+
+    public ResponseEntity<AccountsContactInfoDto> getContactInfoFallback(Throwable throwable) {
+        logger.debug("getContactInfoFallback() method invoked");
+
+        HashMap<String, String> contactDetails = new HashMap<>();
+        contactDetails.put("name","Furkan Yalcin - Developer");
+        contactDetails.put("email", "furkanyalcin@furkanbank.com");
+
+        List<String> onCallSupport = new ArrayList<>();
+        onCallSupport.add("(555) 555-1234");
+        onCallSupport.add("(555) 523-1345");
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new AccountsContactInfoDto("Welcome to EazyBank accounts related docker APIs ", contactDetails, onCallSupport));
     }
 }

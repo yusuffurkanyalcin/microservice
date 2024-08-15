@@ -1,6 +1,7 @@
 package com.example.loans.controller;
 
 import com.example.loans.constants.LoansConstants;
+import com.example.loans.dto.LoansContactInfoDto;
 import com.example.loans.dto.LoansDto;
 import com.example.loans.dto.ResponseDto;
 import com.example.loans.service.ILoansService;
@@ -24,6 +25,7 @@ public class LoansController {
     private final Logger logger = LoggerFactory.getLogger(LoansController.class);
 
     private final ILoansService iLoansService;
+    private final LoansContactInfoDto loansContactInfoDto;
 
 
     @PostMapping("/create")
@@ -77,6 +79,12 @@ public class LoansController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_DELETE));
         }
+    }
+
+    @GetMapping("/contact-info")
+    public ResponseEntity<LoansContactInfoDto> getContactInfo() {
+        logger.debug("Invoked Loans contact-info API");
+        return ResponseEntity.status(HttpStatus.OK).body(loansContactInfoDto);
     }
 
 }
