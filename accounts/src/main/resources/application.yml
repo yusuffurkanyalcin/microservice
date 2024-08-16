@@ -27,6 +27,7 @@ spring:
 
 resilience4j:
   circuitbreaker:
+    circuit-breaker-aspect-order: 1
     configs:
       default:
         slidingWindowSize: 10
@@ -34,6 +35,7 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 10000
   retry:
+    retry-aspect-order: 3
     configs:
       default:
         maxAttempts: 3
@@ -56,6 +58,7 @@ resilience4j:
           - java.util.concurrent.TimeoutException  # only happen in case of TimeoutException
 
   ratelimiter:
+    rate-limiter-aspect-order: 2
     configs:
       default:
         timeoutDuration: 1000

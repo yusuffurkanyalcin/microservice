@@ -140,10 +140,9 @@ public class AccountsController {
     @GetMapping("/contact-info")
     public ResponseEntity<AccountsContactInfoDto> getContactInfo() throws TimeoutException{
         logger.debug("getContactInfo() method invoked");
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(accountsContactInfoDto);
-        throw new TimeoutException();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accountsContactInfoDto);
     }
 
     public ResponseEntity<AccountsContactInfoDto> getContactInfoRetryFallback(Throwable throwable) {
