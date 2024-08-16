@@ -7,6 +7,7 @@ import com.example.accounts.dto.ErrorResponseDto;
 import com.example.accounts.dto.ResponseDto;
 import com.example.accounts.entity.Accounts;
 import com.example.accounts.service.IAccountsService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @Tag(
         name = "CRUD REST APIs for Accounts in FurkanBank",
@@ -132,28 +134,47 @@ public class AccountsController {
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseDto(AccountsConstants.STATUS_417, AccountsConstants.MESSAGE_417_DELETE));
     }
 
-    @Retry(name = "getContactInfo", fallbackMethod = "getContactInfoFallback")
+
+    @Retry(name = "getContactInfoRetry", fallbackMethod = "getContactInfoRetryFallback")
+    @RateLimiter(name = "getContactInfoRateLimiter", fallbackMethod = "getContactInfoRateLimiterFallback")
     @GetMapping("/contact-info")
-    public ResponseEntity<AccountsContactInfoDto> getContactInfo() {
-        logger.debug("getBuildInfo() method invoked");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(accountsContactInfoDto);
+    public ResponseEntity<AccountsContactInfoDto> getContactInfo() throws TimeoutException{
+        logger.debug("getContactInfo() method invoked");
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(accountsContactInfoDto);
+        throw new TimeoutException();
     }
 
-    public ResponseEntity<AccountsContactInfoDto> getContactInfoFallback(Throwable throwable) {
-        logger.debug("getContactInfoFallback() method invoked");
+    public ResponseEntity<AccountsContactInfoDto> getContactInfoRetryFallback(Throwable throwable) {
+        logger.debug("getContactInfoRetryFallback() method invoked");
 
         HashMap<String, String> contactDetails = new HashMap<>();
         contactDetails.put("name","Furkan Yalcin - Developer");
         contactDetails.put("email", "furkanyalcin@furkanbank.com");
 
         List<String> onCallSupport = new ArrayList<>();
-        onCallSupport.add("(555) 555-1234");
-        onCallSupport.add("(555) 523-1345");
+        onCallSupport.add("(555) 555-5555");
+        onCallSupport.add("(666) 666-6666");
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new AccountsContactInfoDto("Welcome to EazyBank accounts related docker APIs ", contactDetails, onCallSupport));
+                .body(new AccountsContactInfoDto("Welcome to FurkanBank accounts related docker APIs ", contactDetails, onCallSupport));
+    }
+
+    public ResponseEntity<AccountsContactInfoDto> getContactInfoRateLimiterFallback(Throwable throwable) {
+        logger.debug("getContactInfoRateLimiterFallback() method invoked");
+
+        HashMap<String, String> contactDetails = new HashMap<>();
+        contactDetails.put("name","Furkan Yalcin - Developer");
+        contactDetails.put("email", "furkanyalcin@furkanbank.com");
+
+        List<String> onCallSupport = new ArrayList<>();
+        onCallSupport.add("(000) 000-0000");
+        onCallSupport.add("(111) 111-1111");
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new AccountsContactInfoDto("Welcome to FurkanBank accounts related docker APIs ", contactDetails, onCallSupport));
     }
 }

@@ -44,6 +44,28 @@ resilience4j:
           - java.lang.NullPointerException
         retryExceptions:
           - java.util.concurrent.TimeoutException  # only happen in case of TimeoutException
+    instances:
+      getContactInfoRetry:
+        maxAttempts: 3
+        waitDuration: 100
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        ignoreExceptions:
+          - java.lang.NullPointerException
+        retryExceptions:
+          - java.util.concurrent.TimeoutException  # only happen in case of TimeoutException
+
+  ratelimiter:
+    configs:
+      default:
+        timeoutDuration: 1000
+        limitRefreshPeriod: 5000
+        limitForPeriod: 1
+    instances:
+      getContactInfoRateLimiter:
+        timeoutDuration: 5000
+        limitRefreshPeriod: 5000
+        limitForPeriod: 4
 
 eureka:
   instance:
