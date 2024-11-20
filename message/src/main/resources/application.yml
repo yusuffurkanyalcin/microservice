@@ -1,0 +1,20 @@
+server:
+  port: 9010
+
+spring:
+  application:
+    name: "message"
+  cloud:
+    function:
+      definition: email|sms   # http://localhost:9010/emailsms and invokes email and sms in order. Email's output is used as input for sms
+    stream:
+      bindings:
+        emailsms-in-0: # The function like input. Receives messages from send-communication and sends email or sms. Acts like consumer
+          destination: send-communication # Topic for Kafka.  Queue for Rabbit
+          group: ${spring.application.name} # Group name for balancing
+        emailsms-out-0: # The function will send a message to communication-sent of topic/queue. Acts like producer
+          destination: communication-sent
+      kafka:
+        binder:
+          brokers:
+            - localhost:59092

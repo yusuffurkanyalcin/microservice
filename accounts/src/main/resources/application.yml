@@ -24,6 +24,20 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+    function:
+      definition: updateCommunication # birden fazla function olduğunda ; işareti ile ayırabiliriz function1; function2; function3
+    stream:
+      bindings:
+        updateCommunication-in-0:
+          destination: communication-sent
+          group: ${spring.application.name}
+        sendCommunication-out-0:
+          destination: send-communication
+      kafka:
+        binder:
+          brokers:
+            - localhost:59092
+
 
 resilience4j:
   circuitbreaker:

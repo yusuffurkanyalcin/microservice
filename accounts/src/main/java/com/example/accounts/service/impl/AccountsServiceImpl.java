@@ -2,6 +2,7 @@ package com.example.accounts.service.impl;
 
 import com.example.accounts.constants.AccountsConstants;
 import com.example.accounts.dto.AccountsDto;
+import com.example.accounts.dto.AccountsMessageDto;
 import com.example.accounts.dto.CustomerDto;
 import com.example.accounts.entity.Accounts;
 import com.example.accounts.entity.Customer;
@@ -13,7 +14,9 @@ import com.example.accounts.repository.AccountsRepository;
 import com.example.accounts.repository.CustomerRepository;
 import com.example.accounts.service.IAccountsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,20 +26,23 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class AccountsServiceImpl implements IAccountsService {
 
+    private static final Logger log = LoggerFactory.getLogger(AccountsServiceImpl.class);
+
     private final AccountsRepository accountsRepository;
     private final CustomerRepository customerRepository;
+    private final StreamBridge streamBridge;
 
     @Override
     public Accounts createAccount(CustomerDto customerDto) {
         Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
-        try {
-            Optional<Customer> optionalCustomer = customerRepository.findByEmailIgnoreCase(customer.getEmail());
-            Customer savedCustomer = customerRepository.save(customer);
-            return accountsRepository.save(createNewAccounts(savedCustomer));
+        Optional<Customer> optionalCustomer = customerRepository.findByEmailIgnoreCase(customer.getEmail());
+        if (optionalCustomer.isPresent()) {
+            throw new CustomerAlreadyExistsException("Customer already registered with given email " + customerDto.getEmail());
         }
-        catch (DataIntegrityViolationException exc) {
-            throw new CustomerAlreadyExistsException("Zaten var");
-        }
+        Customer savedCustomer = customerRepository.save(customer);
+        Accounts savedAccount =  accountsRepository.save(createNewAccounts(savedCustomer));
+        sendCommunication(savedAccount, savedCustomer); // eklendi bilgisini ve datayı gönderdiğimiz kısım
+        return savedAccount;
     }
 
     @Override
@@ -89,6 +95,24 @@ public class AccountsServiceImpl implements IAccountsService {
     }
 
     /**
+     * @param accountNumber - Long
+     * @return boolean indicating if the update of communication status is successful or not
+     */
+    @Override
+    public boolean updateCommunicationStatus(Long accountNumber) {
+        boolean isUpdated = false;
+        if(accountNumber !=null ){
+            Accounts accounts = accountsRepository.findById(accountNumber).orElseThrow(
+                    () -> new ResourceNotFoundException("Account", "AccountNumber", accountNumber.toString())
+            );
+            accounts.setCommunicationSw(true);
+            accountsRepository.save(accounts);
+            isUpdated = true;
+        }
+        return isUpdated;
+    }
+
+    /**
      *
      * @param customer
      * @return the new Account details
@@ -102,5 +126,14 @@ public class AccountsServiceImpl implements IAccountsService {
         newAccount.setAccountType(AccountsConstants.SAVINGS);
         newAccount.setBranchAddress(AccountsConstants.ADDRESS);
         return newAccount;
+    }
+
+    private void sendCommunication(Accounts account, Customer customer) {
+        AccountsMessageDto accountsMsgDto = new AccountsMessageDto(
+                account.getAccountNumber(), customer.getName(), customer.getEmail(), customer.getMobileNumber());
+        log.info("Sending communication request for the details: {}", accountsMsgDto);
+
+        boolean result = streamBridge.send("sendCommunication-out-0", accountsMsgDto);
+        log.info("Communication request is successfully triggered? : {}", result);
     }
 }
