@@ -1,0 +1,6 @@
+dependencies:
+- name: furkanbank-common
+  repository: file://../../furkanbank-common
+  version: 0.1.0
+digest: sha256:0b3360ff42a8fa8688a108f987a53b2842aa1b6916dd185a8a102879fc1a5482
+generated: "2024-12-01T15:50:55.892345+03:00"

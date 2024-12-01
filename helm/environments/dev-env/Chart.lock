@@ -1,0 +1,27 @@
+dependencies:
+- name: furkanbank-common
+  repository: file://../../furkanbank-common
+  version: 0.1.0
+- name: configserver
+  repository: file://../../furkanbank-services/configserver
+  version: 0.1.0
+- name: eurekaserver
+  repository: file://../../furkanbank-services/eurekaserver
+  version: 0.1.0
+- name: accounts
+  repository: file://../../furkanbank-services/accounts
+  version: 0.1.0
+- name: cards
+  repository: file://../../furkanbank-services/cards
+  version: 0.1.0
+- name: loans
+  repository: file://../../furkanbank-services/loans
+  version: 0.1.0
+- name: gatewayserver
+  repository: file://../../furkanbank-services/gatewayserver
+  version: 0.1.0
+- name: message
+  repository: file://../../furkanbank-services/message
+  version: 0.1.0
+digest: sha256:2d23975ade515cdc1dec9b848bbd398072baa3b3563d33643dccce7a1047c4a7
+generated: "2024-12-01T16:25:34.2053874+03:00"
